@@ -31,9 +31,6 @@ function main() {
     return
   }
 
-  gl.clearColor(1.0, 0.0, 0.0, 1.0)
-  gl.clear(gl.COLOR_BUFFER_BIT)
-
   // 获取存储变量的位置
   const aPosition = gl.getAttribLocation(gl.program, 'a_Position')
 
@@ -45,11 +42,43 @@ function main() {
     console.log('Failed to get storge position')
   }
 
-  //
-  gl.vertexAttrib3f(aPosition, 0.5, 0.5, 0.0)
-  gl.vertexAttrib1f(aPointSize, 30.0)
+  // const size = [Math.random(), Math.random(), Math.random()]
 
+  const n = initVertexBuffers(gl)
+
+  // gl.vertexAttrib3f(aPosition, size[0], size[1], size[2])
+  gl.vertexAttrib1f(aPointSize, 30.0)
   gl.uniform4f(aFragColor, 0.0, 0.0, 1.0, 1.0)
 
-  gl.drawArrays(gl.POINTS, 0, 1)
+  gl.clearColor(1.0, 0.0, 0.0, 1.0)
+  gl.clear(gl.COLOR_BUFFER_BIT)
+
+  gl.drawArrays(gl.POINTS, 0, n)
+}
+
+function initVertexBuffers(gl) {
+  const vertices = new Float32Array([0.0, 0.5, -0.5, -0.5, 0.5, -0.5])
+  const n = 3
+
+  // 1. 创建buffer
+  const vertexBuffer = gl.createBuffer()
+  if (!vertexBuffer) {
+    console.log('Failed to create buffer')
+    return -1
+  }
+
+  // 2. 绑定buffer
+  gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer)
+
+  // 3. 向buffer中写入数据
+  gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW)
+
+  // 4. 将buffer数据分配给 a_Position
+  const aPosition = gl.getAttribLocation(gl.program, 'a_Position')
+  gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0)
+
+  // 5. 连接 a_Position 变量与分配给它的缓冲区对象
+  gl.enableVertexAttribArray(aPosition)
+
+  return n
 }
