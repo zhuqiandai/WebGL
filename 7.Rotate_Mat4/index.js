@@ -46,6 +46,7 @@ function main() {
   const uFragColor = gl.getUniformLocation(gl.program, 'u_FragColor')
 
   const uXformMatrix = gl.getUniformLocation(gl.program, 'u_xformMatrix')
+
   gl.uniformMatrix4fv(uXformMatrix, false, uxformMatrix)
 
   const n = initVertexBuffers(gl)
