@@ -38,11 +38,8 @@ function main() {
     console.log('Failed to get storge position')
   }
 
-  // const size = [Math.random(), Math.random(), Math.random()]
-
   const n = initVertexBuffers(gl)
 
-  // gl.vertexAttrib3f(aPosition, size[0], size[1], size[2])
   gl.uniform4f(aFragColor, 0.0, 0.0, 1.0, 1.0)
 
   gl.clearColor(1.0, 0.0, 0.0, 1.0)
