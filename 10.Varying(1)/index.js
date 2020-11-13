@@ -1,9 +1,11 @@
 function main() {
   const VSHADER_SOURCE = `
     attribute vec4 a_Position;
+    attribute float a_PointSize;
 
     void main() {
       gl_Position = a_Position;
+      gl_PointSize = a_PointSize;
     }
     `
 
@@ -31,10 +33,8 @@ function main() {
 
   gl.clearColor(1.0, 0.0, 0.0, 1.0)
 
-
   // 获取存储变量的位置
   const aPosition = gl.getAttribLocation(gl.program, 'a_Position')
-
   const aFragColor = gl.getUniformLocation(gl.program, 'u_FragColor')
 
   if (aPosition < 0 || aFragColor < 0) {
@@ -50,35 +50,37 @@ function main() {
 
   gl.clear(gl.COLOR_BUFFER_BIT)
 
-  gl.drawArrays(gl.TRIANGLES, 0, n)
-  
+  gl.drawArrays(gl.POINTS, 0, n)
 }
 
-
-function tick(){
-  
-}
-
+function tick() {}
 
 function initVertexBuffers(gl) {
-  const vertices = new Float32Array([0.0, 0.3, -0.3, -0.3, 0.3, -0.3])
+  // prettier-ignore
+  const vertices = new Float32Array([
+    0.0, 0.3, 10.0,
+    -0.3, -0.3, 20.0,
+    0.3, -0.3, 30.0
+  ])
   const n = 3
 
-  // 1. 创建buffer
   const vertexBuffer = gl.createBuffer()
   if (!vertexBuffer) {
     console.log('Failed to create buffer')
     return -1
   }
-  // 2. 绑定buffer
   gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer)
-  // 3. 向buffer中写入数据
   gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW)
-  // 4. 将buffer数据分配给 a_Position
+
+  const FSIZE = vertices.BYTES_PER_ELEMENT
+
   const aPosition = gl.getAttribLocation(gl.program, 'a_Position')
-  gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0)
-  // 5. 连接 a_Position 变量与分配给它的缓冲区对象
+  gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, FSIZE * 3, 0)
   gl.enableVertexAttribArray(aPosition)
+
+  const aPointSize = gl.getAttribLocation(gl.program, 'a_PointSize')
+  gl.vertexAttribPointer(aPointSize, 1, gl.FLOAT, false, FSIZE * 3, FSIZE * 2)
+  gl.enableVertexAttribArray(aPointSize)
 
   return n
 }
