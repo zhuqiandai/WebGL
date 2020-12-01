@@ -32,6 +32,7 @@ function main() {
     return
   }
 
+  // initShaders includes the method of createProgram
   if (!initShaders(gl, VSHADER_SOURCE, FSHADER_SOURCE)) {
     console.log('Failed to intialize shaders.')
     return

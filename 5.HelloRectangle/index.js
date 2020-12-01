@@ -30,7 +30,7 @@ function main() {
   }
 
   // 获取存储变量的位置
-  const aPosition = gl.getAttribLocation(gl.program, 'a_Position')
+  // const aPosition = gl.getAttribLocation(gl.program, 'a_Position')
 
   const aFragColor = gl.getUniformLocation(gl.program, 'u_FragColor')
 

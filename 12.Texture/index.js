@@ -1,20 +1,20 @@
 const VSHADER_SOURCE = `
-attribute vec4 a_Position;
-attribute vec2 a_TextCoord;
-varying vec2 v_TextCoord;
+  attribute vec4 a_Position;
+  attribute vec2 a_TextCoord;
+  varying vec2 v_TextCoord;
 
-void main() {
-  gl_Position = a_Position;
-  v_TextCoord = a_TextCoord;
-}
+  void main() {
+    gl_Position = a_Position;
+    v_TextCoord = a_TextCoord;
+  }
 `
 
 // precision mediump float 指定精度
 const FSHADER_SOURCE = `
-precision mediump float;
+  precision mediump float;
 
-uniform sampler2D u_Sampler;
-varying vec2 v_TextCoord;
+  uniform sampler2D u_Sampler;
+  varying vec2 v_TextCoord;
 
   void main(){
     gl_FragColor = texture2D(u_Sampler, v_TextCoord);

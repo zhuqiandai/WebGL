@@ -3,7 +3,6 @@ function main() {
     attribute vec4 a_Position;
     uniform mat4 u_Translate;
     uniform mat4 u_Rotate;
-
     void main() {
       gl_Position = u_Translate * u_Rotate *  a_Position ;
     }
@@ -38,10 +37,10 @@ function main() {
     0.0, 0.0, 1.0, 0.0,
     0.5, 0.0, 0.0, 1.0
   ])
-  
+
   const ANGLE = 90
   const radian = (Math.PI * ANGLE) / 180
-  const cosB = Math.cos(radian) 
+  const cosB = Math.cos(radian)
   const sinB = Math.sin(radian)
 
   // prettier-ignore
