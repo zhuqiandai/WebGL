@@ -6,7 +6,7 @@ const VSHADER_SOURCE = `
   uniform mat4 u_Rotate;
 
   void main() { 
-    gl_Position = a_Position * u_Translate;
+    gl_Position = a_Position * u_Translate * u_Rotate;
     v_Color = gl_Position * 0.5 + 0.5;
   }
 `
@@ -52,6 +52,27 @@ function main() {
   ])
   gl.uniformMatrix4fv(uTranslate, false, translateMaritx)
 
+  // 旋转矩阵
+  const uRotate = gl.getUniformLocation(gl.program, 'u_Rotate')
+
+  let angle = 10
+  angle += 10
+  requestAnimationFrame(main)
+
+  const radian = (Math.PI * angle) / 180
+
+  cosR = Math.cos(radian)
+  sinR = Math.sin(radian)
+
+  // prettier-ignore
+  const uxformMatrix = new Float32Array([
+      cosR, sinR, 0.0, 0.0,
+      -sinR, cosR, 0.0, 0.0,
+      0.0, 0.0, 1.0, 0.0,
+      0.0, 0.0, 0.0, 1.0,
+    ])
+  gl.uniformMatrix4fv(uRotate, false, uxformMatrix)
+
   // 开启从缓冲中获取数据
   gl.enableVertexAttribArray(aPosition)
   gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0)
@@ -70,6 +91,8 @@ function main() {
 
   gl.drawArrays(gl.TRIANGLES, 0, 3)
 }
+
+requestAnimationFrame(main)
 
 function initVertexBuffer(gl) {
   // prettier-ignore
