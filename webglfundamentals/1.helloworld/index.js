@@ -38,45 +38,6 @@ function main() {
     return
   }
 
-  // 顶点着色器
-  const aPosition = gl.getAttribLocation(gl.program, 'a_Position')
-
-  // 平移矩阵
-  const uTranslate = gl.getUniformLocation(gl.program, 'u_Translate')
-  // prettier-ignore
-  const translateMaritx = new Float32Array([
-    1.0, 1.0, 0.0, 0.0,
-    0.0, 0.5, 0.0, 0.0,
-    0.0, 0.0, 1.0, 0.0,
-    0.0, 0.0, 0.0, 1.0
-  ])
-  gl.uniformMatrix4fv(uTranslate, false, translateMaritx)
-
-  // 旋转矩阵
-  const uRotate = gl.getUniformLocation(gl.program, 'u_Rotate')
-
-  let angle = 10
-  angle += 10
-  requestAnimationFrame(main)
-
-  const radian = (Math.PI * angle) / 180
-
-  cosR = Math.cos(radian)
-  sinR = Math.sin(radian)
-
-  // prettier-ignore
-  const uxformMatrix = new Float32Array([
-      cosR, sinR, 0.0, 0.0,
-      -sinR, cosR, 0.0, 0.0,
-      0.0, 0.0, 1.0, 0.0,
-      0.0, 0.0, 0.0, 1.0,
-    ])
-  gl.uniformMatrix4fv(uRotate, false, uxformMatrix)
-
-  // 开启从缓冲中获取数据
-  gl.enableVertexAttribArray(aPosition)
-  gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0)
-
   // // 片元shader 直接创建
   // const uFragColor = gl.getUniformLocation(gl.program, 'u_FragColor')
   // gl.uniform4f(uFragColor, 1.0, 1.0, 0.0, 1.0)
@@ -86,13 +47,68 @@ function main() {
   // 视角
   gl.viewport(0, 0, canvas.clientWidth, canvas.clientHeight)
 
-  gl.clearColor(1.0, 1.0, 1.0, 1.0)
-  gl.clear(gl.COLOR_BUFFER_BIT)
+  let then = 0
+  function render(now) {
+    now *= 30
+    const deltaTime = now - then
+    then = now
 
-  gl.drawArrays(gl.TRIANGLES, 0, 3)
+    drawScene(gl, deltaTime)
+
+    requestAnimationFrame(render)
+  }
+  requestAnimationFrame(render)
 }
 
-requestAnimationFrame(main)
+function drawScene(gl, deltaTime) {
+  // canvas 背景色
+  gl.clearColor(1.0, 1.0, 1.0, 1.0)
+
+  // 使用预设值清空缓冲
+  gl.clear(gl.COLOR_BUFFER_BIT)
+
+  // 顶点着色器
+  const aPosition = gl.getAttribLocation(gl.program, 'a_Position')
+
+  // 平移矩阵
+  const uTranslate = gl.getUniformLocation(gl.program, 'u_Translate')
+
+  let x = 1
+  // prettier-ignore
+  const translateMaritx = new Float32Array([
+      1.0, 1.0, 0.0, 0.0,
+      0.0, x, 0.0, 0.0,
+      0.0, 0.0, 1.0, 0.0,
+      0.0, 0.0, 0.0, 1.0
+    ])
+  gl.uniformMatrix4fv(uTranslate, false, translateMaritx)
+
+  // 旋转矩阵
+  const uRotate = gl.getUniformLocation(gl.program, 'u_Rotate')
+
+  let angle = 10
+  angle += deltaTime
+
+  const radian = (Math.PI * angle) / 180
+
+  cosR = Math.cos(radian)
+  sinR = Math.sin(radian)
+
+  // prettier-ignore
+  const uxformMatrix = new Float32Array([
+        cosR, sinR, 0.0, 0.0,
+        -sinR, cosR, 0.0, 0.0,
+        0.0, 0.0, 1.0, 0.0,
+        0.0, 0.0, 0.0, 1.0,
+      ])
+  gl.uniformMatrix4fv(uRotate, false, uxformMatrix)
+
+  // 开启从缓冲中获取数据
+  gl.enableVertexAttribArray(aPosition)
+  gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0)
+
+  gl.drawArrays(gl.TRIANGLES, 0, 3 * 2)
+}
 
 function initVertexBuffer(gl) {
   // prettier-ignore
